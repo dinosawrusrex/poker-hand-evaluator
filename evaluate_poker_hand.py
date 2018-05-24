@@ -16,23 +16,25 @@ def convert_alpha(rank, ranks):
 
 def turn_ranks_to_numbers(hand):
     ranks = [int(card[1]) if card[1].isdigit() else card[1] for card in hand]
-    ranks = sorted([convert_alpha(rank, ranks) if isinstance(rank, str)
-                    else rank for rank in ranks])
-    return(ranks)
+    output = sorted([convert_alpha(rank, ranks) if isinstance(rank, str)
+                     else rank for rank in ranks])
+    return(output)
 
 def separate_ranks_and_suits(hand):
     return([card.split(' ') for card in hand])
 
+
 # Ranking
 SCORE = {'high card': 1,
-           'one pair': 2,
-           'two pair': 3,
-           'three of a kind': 4,
-           'straight': 5,
-           'flush': 6,
-           'full house': 7,
-           'four of a kind': 8,
-           'straight flush': 9}
+         'one pair': 2,
+         'two pair': 3,
+         'three of a kind': 4,
+         'straight': 5,
+         'flush': 6,
+         'full house': 7,
+         'four of a kind': 8,
+         'straight flush': 9}
+
 
 # Hands
 with open('hands', 'r') as hands:
@@ -40,12 +42,10 @@ with open('hands', 'r') as hands:
 
 hand_one, hand_two = [sorted(hand.split(', ')) for hand in hands.split('\n')
                       if hand != '']
-
+print(hand_one)
 hand_one = separate_ranks_and_suits(hand_one)
 hand_two = separate_ranks_and_suits(hand_two)
 
-trial_hand = ['spade ace', 'diamond 2', 'spade 3', 'club 3', 'heart 5']
-trial_hand = separate_ranks_and_suits(trial_hand)
 
 # For checking flush and straights
 def check_for_same_suit(hand):
@@ -89,20 +89,31 @@ def rank_hand(hand):
     else:
         return('high card')
 
+
+# Compare two hands
+def mode_rank(hand):
+    ranks = turn_ranks_to_numbers(hand)
+    output = max(set(ranks), key=ranks.count)
+    return(output)
+
 def evaluate_hands(hand_one, hand_two):
     if SCORE[rank_hand(hand_one)] > SCORE[rank_hand(hand_two)]:
-        return('hand one wins 1')
+        return('hand one wins by score')
     elif SCORE[rank_hand(hand_one)] < SCORE[rank_hand(hand_two)]:
-        return('hand two wins 1')
+        return('hand two wins by score')
     else: # If both hands have the same 'points'
-        if max(turn_ranks_to_numbers(hand_one)) > \
-           max(turn_ranks_to_numbers(hand_two)):
-            return('hand one wins 2')
-        elif max(turn_ranks_to_numbers(hand_one)) < \
-           max(turn_ranks_to_numbers(hand_two)):
-            return('hand two wins 2')
+        if mode_rank(hand_one) > mode_rank(hand_two):
+            return('hand one wins max rank')
+        elif mode_rank(hand_one) < mode_rank(hand_two):
+            return('hand two wins max rank')
         else:
             return('identical hands')
 
-print(hand_one, '\n', hand_two)
+
+print('Hand one has {}, which is a {} and has a score of {}.'.format(hand_one,
+rank_hand(hand_one), SCORE[rank_hand(hand_one)]))
+print()
+print('Hand two has {}, which is a {} and has a score of {}.'.format(hand_two,
+rank_hand(hand_two), SCORE[rank_hand(hand_two)]))
+print()
 print(evaluate_hands(hand_one, hand_two))
