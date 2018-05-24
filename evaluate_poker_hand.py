@@ -103,9 +103,9 @@ def evaluate_hands(hand_one, hand_two):
         return('hand two wins by score')
     else: # If both hands have the same 'points'
         if mode_rank(hand_one) > mode_rank(hand_two):
-            return('hand one wins max rank')
+            return('hand one wins by max rank')
         elif mode_rank(hand_one) < mode_rank(hand_two):
-            return('hand two wins max rank')
+            return('hand two wins by max rank')
         else:
             return('identical hands')
 
