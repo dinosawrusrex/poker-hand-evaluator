@@ -1,27 +1,51 @@
-# Conversions
-ROYALTY_CONVERSIONS = {'jack': 11, 'queen': 12, 'king': 13}
+import json
 
-def ace_conversion(ranks):
-    low_order = {2,3,4,5}
-    if set(ranks).intersection(low_order) == low_order:
-        return(1)
-    else:
-        return(14)
+class Card:
+    def __init__(self, card, hand):
+        self.suit = card['suit']
+        self.rank = card['rank']
+        self.hand = hand
+        self.rank_score = self.rank_to_score()
 
-def convert_alpha(rank, ranks):
-    if rank == 'ace':
-        return(ace_conversion(ranks))
-    else:
-        return(ROYALTY_CONVERSIONS[rank])
+    # Conversions
+    def ace_conversion(self):
+        ranks = [self.hand[card]['rank'] for card in self.hand]
+        low_order = {2,3,4,5}
+        if set(ranks).intersection(low_order) == low_order:
+            return(1)
+        else:
+            return(14)
 
-def turn_ranks_to_numbers(hand):
-    ranks = [int(card[1]) if card[1].isdigit() else card[1] for card in hand]
-    output = sorted([convert_alpha(rank, ranks) if isinstance(rank, str)
-                     else rank for rank in ranks])
-    return(output)
+    def convert_alpha(self):
+        royalty_conversion = {'jack': 11, 'queen': 12, 'king': 13}
+        if self.rank == 'ace':
+            return(self.ace_conversion())
+        else:
+            return(royalty_conversion[self.rank])
 
-def separate_ranks_and_suits(hand):
-    return([card.split(' ') for card in hand])
+    def rank_to_score(self):
+        if isinstance(self.rank, int):
+            output = self.rank
+        else:
+            output = self.convert_alpha()
+        return(output)
+
+
+class Hand:
+    def __init__(self, hand):
+        self.cards = [Card(hand[card], hand) for card in hand]
+
+class Game:
+    def __init__(self, data):
+        self.hand_one = Hand(data['hand_one'])
+        self.hand_two = Hand(data['hand_two'])
+
+with open('hands.json', 'r') as hands:
+    data = json.load(hands)
+
+#print(data['hand_one']['one'])
+game = Game(data)
+print(game.hand_two.cards[1].rank_score)
 
 
 # Ranking
@@ -34,17 +58,6 @@ SCORE = {'high card': 1,
          'full house': 7,
          'four of a kind': 8,
          'straight flush': 9}
-
-
-# Hands
-with open('hands', 'r') as hands:
-    hands = hands.read()
-
-hand_one, hand_two = [sorted(hand.split(', ')) for hand in hands.split('\n')
-                      if hand != '']
-print(hand_one)
-hand_one = separate_ranks_and_suits(hand_one)
-hand_two = separate_ranks_and_suits(hand_two)
 
 
 # For checking flush and straights
@@ -108,12 +121,21 @@ def evaluate_hands(hand_one, hand_two):
             return('hand two wins by max rank')
         else:
             return('identical hands')
+'''
+# Run comparison
+hand_one, hand_two = [sorted(hand.split(', ')) for hand in hands.split('\n')
+                      if hand != '']
 
+hand_one = separate_ranks_and_suits(hand_one)
+hand_two = separate_ranks_and_suits(hand_two)
 
-print('Hand one has {}, which is a {} and has a score of {}.'.format(hand_one,
-rank_hand(hand_one), SCORE[rank_hand(hand_one)]))
+hands_vs = evaluate_hands(hand_one, hand_two)
+
+print('Hand one has {}, which is a {} and has a score of {}.'.format(
+    hand_one, rank_hand(hand_one), SCORE[rank_hand(hand_one)]))
 print()
-print('Hand two has {}, which is a {} and has a score of {}.'.format(hand_two,
-rank_hand(hand_two), SCORE[rank_hand(hand_two)]))
+print('Hand two has {}, which is a {} and has a score of {}.'.format(
+    hand_two, rank_hand(hand_two), SCORE[rank_hand(hand_two)]))
 print()
-print(evaluate_hands(hand_one, hand_two))
+print(hands_vs)
+'''
