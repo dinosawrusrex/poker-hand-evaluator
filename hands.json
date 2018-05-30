@@ -1,2 +1,25 @@
-spade 5, heart 3, spade 4, spade 2, heart 8
-spade 5, heart 3, spade 4, spade 2, spade 6
+{"hand_one": {
+	"one": {"suit": "spade",
+		"rank": 2},
+	"two": {"suit": "club",
+		"rank": 2},
+	"three": {"suit": "diamond",
+		"rank": 2},
+	"four": {"suit": "heart",
+		"rank": 2},
+	"five": {"suit": "diamond",
+		"rank": 5}
+	},
+"hand_two": {
+	"one": {"suit": "spade",
+		"rank": "ace"},
+	"two": {"suit": "club",
+		"rank": 4},
+	"three": {"suit": "diamond",
+		  "rank": 4},
+	"four": {"suit": "heart",
+		 "rank": 4},
+	"five": {"suit": "spade",
+		 "rank": 4}
+	}
+}
