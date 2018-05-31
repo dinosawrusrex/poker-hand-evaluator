@@ -97,27 +97,25 @@ class Game:
         scores_two = [card.rank_score for card in self.hand_two.cards]
         scores_one = sorted(set(scores_one), key=scores_one.count)
         scores_two = sorted(set(scores_two), key=scores_two.count)
-        index = len(scores_one)-1
         for i in range(len(scores_one)-1, -1, -1):
-            index = i
-            print(index)
             if scores_one[i] != scores_two[i]:
-                return(index)
-        return(index)
+                return(scores_one[i], scores_two[i])
+        return(scores_one[i], scores_two[i])
 
     def evaluate_hands(self):
         if self.hand_one.score > self.hand_two.score:
             return('hand one wins by score')
         elif self.hand_one.score < self.hand_two.score:
             return('hand two wins by score')
-        else: # If both hands have the same 'points'
-            index = self.index_to_compare()
-            if self.hand_one.cards[index].rank_score > self.hand_two.cards[index].rank_score:
+        else:
+            card_one, card_two = self.index_to_compare()
+            if card_one > card_two:
                 return('hand one wins by max rank_score')
-            elif self.hand_one.cards[index].rank_score < self.hand_two.cards[index].rank_score:
+            elif card_one < card_two:
                 return('hand two wins by max rank_score')
             else:
                 return('identical hands')
+
 
 with open('hands.json', 'r') as hands:
     data = json.load(hands)
