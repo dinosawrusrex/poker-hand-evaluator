@@ -121,4 +121,8 @@ with open('hands.json', 'r') as hands:
     data = json.load(hands)
 
 game = Game(data)
+print('Hand one is a {} and has a score of {}.'.format(game.hand_one.poker_hand, game.hand_one.score))
+print()
+print('Hand two is a {} and has a score of {}.'.format(game.hand_two.poker_hand, game.hand_two.score))
+print()
 print(game.evaluate_hands())
