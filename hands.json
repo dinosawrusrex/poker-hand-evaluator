@@ -1,25 +1,25 @@
 {"hand_one": {
-	"one": {"suit": "spade",
+	"one": {"suit": "diamond",
 		"rank": 2},
 	"two": {"suit": "club",
-		"rank": 2},
-	"three": {"suit": "diamond",
-		"rank": 2},
-	"four": {"suit": "heart",
-		"rank": 2},
-	"five": {"suit": "diamond",
-		"rank": 5}
+		"rank": 3},
+	"three": {"suit": "heart",
+		"rank": "king"},
+	"four": {"suit": "club",
+		"rank": 3},
+	"five": {"suit": "spade",
+		"rank": 2}
 	},
 "hand_two": {
 	"one": {"suit": "spade",
 		"rank": "ace"},
-	"two": {"suit": "club",
-		"rank": 4},
-	"three": {"suit": "diamond",
-		  "rank": 4},
-	"four": {"suit": "heart",
-		 "rank": 4},
+	"two": {"suit": "heart",
+		"rank": 3},
+	"three": {"suit": "club",
+		  "rank": 3},
+	"four": {"suit": "diamond",
+		 "rank": 2},
 	"five": {"suit": "spade",
-		 "rank": 4}
+		 "rank": 2}
 	}
 }
