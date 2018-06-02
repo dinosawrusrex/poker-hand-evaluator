@@ -47,6 +47,7 @@ class Hand:
         self.cards = [Card(hand[card], hand) for card in hand]
         self.poker_hand = self.rank_hand()
         self.score = self.SCORE[self.poker_hand]
+        self.frequency_of_ranks = self.frequency_of_rank()
 
     def check_for_flush(self):
         suits = [card.suit for card in self.cards]
@@ -86,21 +87,33 @@ class Hand:
         else:
             return('high card')
 
+    def frequency_of_rank(self):
+        rank_scores = [card.rank_score for card in self.cards]
+        frequencies = {count: sorted([score for score in set(rank_scores)
+                if rank_scores.count(score) == count], reverse=True)
+                for count in range(
+                max([rank_scores.count(score) for score in rank_scores]),
+                min([rank_scores.count(score) for score in rank_scores])-1, -1)}
+        return(frequencies)
+
 
 class Game:
     def __init__(self, data):
         self.hand_one = Hand(data['hand_one'])
         self.hand_two = Hand(data['hand_two'])
 
-    def index_to_compare(self):
-        scores_one = [card.rank_score for card in self.hand_one.cards]
-        scores_two = [card.rank_score for card in self.hand_two.cards]
-        scores_one = sorted(set(scores_one), key=scores_one.count)
-        scores_two = sorted(set(scores_two), key=scores_two.count)
-        for i in range(len(scores_one)-1, -1, -1):
-            if scores_one[i] != scores_two[i]:
-                return(scores_one[i], scores_two[i])
-        return(scores_one[i], scores_two[i])
+    def evaluate_tied_hands(self):
+        for key in self.hand_one.frequency_of_ranks:
+            for i in range(len(self.hand_one.frequency_of_ranks[key])):
+                rank_one = self.hand_one.frequency_of_ranks[key][i]
+                rank_two = self.hand_two.frequency_of_ranks[key][i]
+                print(rank_one, rank_two)
+                if rank_one > rank_two:
+                    return('hand one')
+                elif rank_one < rank_two:
+                    return('hand two')
+        else:
+            return('absolute draw')
 
     def evaluate_hands(self):
         if self.hand_one.score > self.hand_two.score:
@@ -108,19 +121,16 @@ class Game:
         elif self.hand_one.score < self.hand_two.score:
             return('hand two wins by score')
         else:
-            card_one, card_two = self.index_to_compare()
-            if card_one > card_two:
-                return('hand one wins by max rank_score')
-            elif card_one < card_two:
-                return('hand two wins by max rank_score')
-            else:
-                return('identical hands')
+            return(self.evaluate_tied_hands())
 
 
 with open('hands.json', 'r') as hands:
     data = json.load(hands)
 
 game = Game(data)
+print(game.hand_one.frequency_of_ranks)
+print(game.hand_two.frequency_of_ranks)
+print()
 print('Hand one is a {} and has a score of {}.'.format(game.hand_one.poker_hand, game.hand_one.score))
 print()
 print('Hand two is a {} and has a score of {}.'.format(game.hand_two.poker_hand, game.hand_two.score))
