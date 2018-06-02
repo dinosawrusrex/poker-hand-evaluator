@@ -25,13 +25,20 @@ class Card:
 
     def rank_to_score(self):
         if isinstance(self.rank, int):
-            output = self.rank
+            return(self.rank)
         else:
-            output = self.convert_alpha()
-        return(output)
+            return(self.convert_alpha())
 
 
 class Hand:
+
+    def __init__(self, hand):
+        self.cards = [Card(hand[card], hand) for card in hand]
+        self.suits = [card.suit for card in self.cards]
+        self.rank_scores = sorted([card.rank_score for card in self.cards])
+        self.poker_hand = self.rank_hand()
+        self.score = self.SCORE[self.poker_hand]
+        self.frequency_of_ranks = self.frequency_of_rank()
 
     SCORE = {'high card': 1,
          'one pair': 2,
@@ -43,28 +50,19 @@ class Hand:
          'four of a kind': 8,
          'straight flush': 9}
 
-    def __init__(self, hand):
-        self.cards = [Card(hand[card], hand) for card in hand]
-        self.poker_hand = self.rank_hand()
-        self.score = self.SCORE[self.poker_hand]
-        self.frequency_of_ranks = self.frequency_of_rank()
 
     def check_for_flush(self):
-        suits = [card.suit for card in self.cards]
-        if len(set(suits)) == 1:
-            return(True)
-        else:
-            return(False)
+        output = len(set(self.suits)) == 1
+        return(output)
 
     def check_for_straight(self):
-        ranks = sorted([card.rank_score for card in self.cards])
-        output = [ranks[i]-ranks[i+1] for i in range(len(ranks)-1)].count(-1)\
-                == 4
+        output = [self.rank_scores[i]-self.rank_scores[i+1] for i in
+                range(len(self.rank_scores)-1)].count(-1) == 4
         return(output)
 
     def create_rank_pattern(self):
-        ranks = [card.rank for card in self.cards]
-        count_pattern = sorted([ranks.count(rank) for rank in set(ranks)])
+        count_pattern = sorted([self.rank_scores.count(score)
+                        for score in set(self.rank_scores)])
         return(count_pattern)
 
     def rank_hand(self):
