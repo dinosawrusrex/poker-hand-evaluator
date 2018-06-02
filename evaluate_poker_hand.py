@@ -106,32 +106,35 @@ class Game:
             for i in range(len(self.hand_one.frequency_of_ranks[key])):
                 rank_one = self.hand_one.frequency_of_ranks[key][i]
                 rank_two = self.hand_two.frequency_of_ranks[key][i]
-                print(rank_one, rank_two)
                 if rank_one > rank_two:
-                    return('hand one')
+                    return('Hand one wins by a higher rank.')
                 elif rank_one < rank_two:
-                    return('hand two')
+                    return('Hand two wins by a higher rank.')
         else:
             return('absolute draw')
 
     def evaluate_hands(self):
         if self.hand_one.score > self.hand_two.score:
-            return('hand one wins by score')
+            return('Hand one wins by score.')
         elif self.hand_one.score < self.hand_two.score:
-            return('hand two wins by score')
+            return('Hand two wins by score.')
         else:
             return(self.evaluate_tied_hands())
+
+    def print_information(self):
+        print('Hand one: {} \n'.format([(card.suit, card.rank) for card in
+            self.hand_one.cards]))
+        print('Hand two: {} \n'.format([(card.suit, card.rank) for card in
+            self.hand_two.cards]))
+        print('Hand one is a {} and has a score of {}.\n'.format(
+            game.hand_one.poker_hand, game.hand_one.score))
+        print('Hand two is a {} and has a score of {}.\n'.format(
+            game.hand_two.poker_hand, game.hand_two.score))
+        print(game.evaluate_hands())
 
 
 with open('hands.json', 'r') as hands:
     data = json.load(hands)
 
 game = Game(data)
-print(game.hand_one.frequency_of_ranks)
-print(game.hand_two.frequency_of_ranks)
-print()
-print('Hand one is a {} and has a score of {}.'.format(game.hand_one.poker_hand, game.hand_one.score))
-print()
-print('Hand two is a {} and has a score of {}.'.format(game.hand_two.poker_hand, game.hand_two.score))
-print()
-print(game.evaluate_hands())
+game.print_information()
