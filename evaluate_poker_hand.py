@@ -86,12 +86,13 @@ class Hand:
             return('high card')
 
     def frequency_of_rank(self):
-        rank_scores = [card.rank_score for card in self.cards]
-        frequencies = {count: sorted([score for score in set(rank_scores)
-                if rank_scores.count(score) == count], reverse=True)
-                for count in range(
-                max([rank_scores.count(score) for score in rank_scores]),
-                min([rank_scores.count(score) for score in rank_scores])-1, -1)}
+        frequencies = {count: sorted([score for score in set(self.rank_scores)
+                    if self.rank_scores.count(score) == count], reverse=True)
+                    for count in range(
+                    max([self.rank_scores.count(score)
+                        for score in self.rank_scores]),
+                    min([self.rank_scores.count(score)
+                        for score in self.rank_scores])-1, -1)}
         return(frequencies)
 
 
