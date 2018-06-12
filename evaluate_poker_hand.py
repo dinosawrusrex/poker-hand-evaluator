@@ -1,17 +1,15 @@
 import json
 
 class Card:
+
     def __init__(self, card, hand):
         self.suit = card['suit']
         self.rank = card['rank']
         self.hand = hand
         self.rank_score = self.rank_to_score()
 
-    # Conversions
     def ace_conversion(self):
-        ranks = [self.hand[card]['rank'] for card in self.hand]
-        low_order = {2,3,4,5}
-        if set(ranks).intersection(low_order) == low_order:
+        if {2,3,4,5}.issubset([self.hand[card]['rank'] for card in self.hand]):
             return(1)
         else:
             return(14)
@@ -101,18 +99,6 @@ class Game:
         self.hand_one = Hand(data['hand_one'])
         self.hand_two = Hand(data['hand_two'])
 
-    def evaluate_tied_hands(self):
-        for key in self.hand_one.frequency_of_ranks:
-            for i in range(len(self.hand_one.frequency_of_ranks[key])):
-                rank_one = self.hand_one.frequency_of_ranks[key][i]
-                rank_two = self.hand_two.frequency_of_ranks[key][i]
-                if rank_one > rank_two:
-                    return('Hand one wins by a higher rank.')
-                elif rank_one < rank_two:
-                    return('Hand two wins by a higher rank.')
-        else:
-            return('absolute draw')
-
     def evaluate_hands(self):
         if self.hand_one.score > self.hand_two.score:
             return('Hand one wins by score.')
@@ -121,20 +107,38 @@ class Game:
         else:
             return(self.evaluate_tied_hands())
 
+    def evaluate_tied_hands(self):
+        print('Hands are tied. Looking down the ranks:\n')
+        for key in self.hand_one.frequency_of_ranks:
+            print('Looking for card(s) with count {}:\n'.format(key))
+            for i in range(len(self.hand_one.frequency_of_ranks[key])):
+                rank_one = self.hand_one.frequency_of_ranks[key][i]
+                rank_two = self.hand_two.frequency_of_ranks[key][i]
+                print('Comparing ranks of hand one: {}, hand two: {}.'.format(
+                    rank_one, rank_two))
+                if rank_one > rank_two:
+                    return('\nHand one wins by a higher rank.')
+                elif rank_one < rank_two:
+                    return('\nHand two wins by a higher rank.')
+                else:
+                    print('Still tied. Continue looking.\n')
+        else:
+            return('Identical hands. Draw.')
+
     def print_information(self):
-        print('Hand one: {} \n'.format([(card.suit, card.rank) for card in
+        print('Hand one: {}'.format([(card.suit, card.rank) for card in
             self.hand_one.cards]))
         print('Hand two: {} \n'.format([(card.suit, card.rank) for card in
             self.hand_two.cards]))
-        print('Hand one is a {} and has a score of {}.\n'.format(
+        print('Hand one is a {} and has a score of {}.'.format(
             game.hand_one.poker_hand, game.hand_one.score))
         print('Hand two is a {} and has a score of {}.\n'.format(
             game.hand_two.poker_hand, game.hand_two.score))
         print(game.evaluate_hands())
 
 
-with open('hands.json', 'r') as hands:
-    data = json.load(hands)
-
-game = Game(data)
-game.print_information()
+if __name__ == '__main__':
+    with open('hands.json', 'r') as hands:
+        data = json.load(hands)
+        game = Game(data)
+        game.print_information()
