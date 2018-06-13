@@ -15,11 +15,9 @@ class Card:
             return(14)
 
     def convert_alpha(self):
-        royalty_conversion = {'jack': 11, 'queen': 12, 'king': 13}
-        if self.rank == 'ace':
-            return(self.ace_conversion())
-        else:
-            return(royalty_conversion[self.rank])
+        royalty_conversion = {'jack': 11, 'queen': 12, 'king': 13,
+                'ace': self.ace_conversion()}
+        return(royalty_conversion[self.rank])
 
     def rank_to_score(self):
         if isinstance(self.rank, int):
@@ -36,7 +34,7 @@ class Hand:
         self.rank_scores = sorted([card.rank_score for card in self.cards])
         self.poker_hand = self.rank_hand()
         self.score = self.SCORE[self.poker_hand]
-        self.frequency_of_ranks = self.frequency_of_rank()
+        self.frequency_of_ranks = self.frequency_of_ranks()
 
     SCORE = {'high card': 1,
          'one pair': 2,
@@ -83,7 +81,7 @@ class Hand:
         else:
             return('high card')
 
-    def frequency_of_rank(self):
+    def frequency_of_ranks(self):
         frequencies = {count: sorted([score for score in set(self.rank_scores)
                     if self.rank_scores.count(score) == count], reverse=True)
                     for count in range(
