@@ -129,10 +129,10 @@ class Game:
         print('Hand two: {} \n'.format([(card.suit, card.rank) for card in
             self.hand_two.cards]))
         print('Hand one is a {} and has a score of {}.'.format(
-            game.hand_one.poker_hand, game.hand_one.score))
+            self.hand_one.poker_hand, self.hand_one.score))
         print('Hand two is a {} and has a score of {}.\n'.format(
-            game.hand_two.poker_hand, game.hand_two.score))
-        print(game.evaluate_hands())
+            self.hand_two.poker_hand, self.hand_two.score))
+        print(self.evaluate_hands())
 
 
 if __name__ == '__main__':
