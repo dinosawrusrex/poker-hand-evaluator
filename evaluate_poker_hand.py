@@ -1,12 +1,17 @@
 import json
 
 class Card:
-
     def __init__(self, card, hand):
         self.suit = card['suit']
         self.rank = card['rank']
         self.hand = hand
-        self.rank_score = self.rank_to_score()
+
+    @property
+    def rank_score(self):
+        if isinstance(self.rank, int):
+            return(self.rank)
+        else:
+            return(self.convert_alpha())
 
     def ace_conversion(self):
         if {2,3,4,5}.issubset([self.hand[card]['rank'] for card in self.hand]):
@@ -19,12 +24,6 @@ class Card:
                 'ace': self.ace_conversion()}
         return(royalty_conversion[self.rank])
 
-    def rank_to_score(self):
-        if isinstance(self.rank, int):
-            return(self.rank)
-        else:
-            return(self.convert_alpha())
-
 
 class Hand:
 
@@ -32,9 +31,7 @@ class Hand:
         self.cards = [Card(hand[card], hand) for card in hand]
         self.suits = [card.suit for card in self.cards]
         self.rank_scores = sorted([card.rank_score for card in self.cards])
-        self.poker_hand = self.rank_hand()
         self.score = self.SCORE[self.poker_hand]
-        self.frequency_of_ranks = self.frequency_of_ranks()
 
     SCORE = {'high card': 1,
          'one pair': 2,
@@ -46,6 +43,39 @@ class Hand:
          'four of a kind': 8,
          'straight flush': 9}
 
+    @property
+    def list_of_counts(self):
+        count_pattern = sorted([self.rank_scores.count(score)
+                        for score in set(self.rank_scores)])
+        return(count_pattern)
+
+    @property
+    def frequency_of_ranks(self):
+        frequencies = {count: sorted([score for score in set(self.rank_scores)
+                    if self.rank_scores.count(score) == count], reverse=True)
+                    for count in reversed(self.list_of_counts)}
+        return(frequencies)
+
+    @property
+    def poker_hand(self):
+        if self.check_for_straight():
+            if self.check_for_flush():
+                return('straight flush')
+            return('straight')
+        elif self.check_for_flush() and not self.check_for_straight():
+            return('flush')
+        elif self.list_of_counts == [1,4]:
+            return('four of a kind')
+        elif self.list_of_counts == [2,3]:
+            return('full house')
+        elif self.list_of_counts == [1,1,3]:
+            return('three of a kind')
+        elif self.list_of_counts == [1,2,2]:
+            return('two pair')
+        elif self.list_of_counts == [1,1,1,2]:
+            return('one pair')
+        else:
+            return('high card')
 
     def check_for_flush(self):
         output = len(set(self.suits)) == 1
@@ -55,41 +85,6 @@ class Hand:
         output = [self.rank_scores[i]-self.rank_scores[i+1] for i in
                 range(len(self.rank_scores)-1)].count(-1) == 4
         return(output)
-
-    def create_rank_pattern(self):
-        count_pattern = sorted([self.rank_scores.count(score)
-                        for score in set(self.rank_scores)])
-        return(count_pattern)
-
-    def rank_hand(self):
-        if self.check_for_straight():
-            if self.check_for_flush():
-                return('straight flush')
-            return('straight')
-        elif self.check_for_flush() and not self.check_for_straight():
-            return('flush')
-        elif self.create_rank_pattern() == [1,4]:
-            return('four of a kind')
-        elif self.create_rank_pattern() == [2,3]:
-            return('full house')
-        elif self.create_rank_pattern() == [1,1,3]:
-            return('three of a kind')
-        elif self.create_rank_pattern() == [1,2,2]:
-            return('two pair')
-        elif self.create_rank_pattern() == [1,1,1,2]:
-            return('one pair')
-        else:
-            return('high card')
-
-    def frequency_of_ranks(self):
-        frequencies = {count: sorted([score for score in set(self.rank_scores)
-                    if self.rank_scores.count(score) == count], reverse=True)
-                    for count in range(
-                    max([self.rank_scores.count(score)
-                        for score in self.rank_scores]),
-                    min([self.rank_scores.count(score)
-                        for score in self.rank_scores])-1, -1)}
-        return(frequencies)
 
 
 class Game:
