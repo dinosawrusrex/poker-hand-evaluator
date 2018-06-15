@@ -16,7 +16,7 @@ classes helped organise the methods (I'm not sure if the term 'encapsulation'
 is the right term or if the way I called on the methods reflects this term).
 
 I also dealt with a scenario that was previously unaccounted for, that is given
-two hands are indentical and the highest matching cards are also identical. My
+two hands are identical and the highest matching cards are also identical. My
 initial code would not handle this correctly. Now it does, but I have more work
 to make it more readable. I certainly hope this would be the last scenario left
 unaccounted for, but I would not be surprised if there were more.
