@@ -27,7 +27,7 @@ I decided to organise my cards in JSON format. I was familiar with it.
 Currently, I have two different JSON files: `card_template` and `hands`.
 
 `hands` was the first file I used and it still is used when
-`evaluate_poker_hand.py` is called.
+`poker_hand_evaluator.py` is called.
 
 `card_template` was created when I recently worked on creating a random hands
 generator. It is used when `random_hand_generator.py` is called, and note,
@@ -37,9 +37,9 @@ generator. It is used when `random_hand_generator.py` is called, and note,
 
 ### Python
 `main` is essentially a function call that draws from `random_hand_generator`
-and `evaluate_poker_hand`. It gets a set of hands and then evaluates both of
+and `poker_hand_evaluator`. It gets a set of hands and then evaluates both of
 them. So every instance `main` is run, different hands will be produced and
-of course, different results will be produced through `evaluate_poker_hand`.
+of course, different results will be produced through `poker_hand_evaluator`.
 
 `random_hand_generator` generates a set of hands. It reads in the
 `card_template.json` as a template to create a new JSON file/data for a new
@@ -47,7 +47,7 @@ instance of a game. Currently, it does not take into account whether a card has
 been drawn or not. So imagine that this is running with an access to infinite
 decks.
 
-`evaluate_poker_hand` evaluates the hands given a JSON file/data.
+`poker_hand_evaluator` evaluates the hands given a JSON file/data.
 
 `poker_hand_testing` is a set of tests using unittest. I created it on the
 day-in-the-office to test whether my code was correctly attributing the right
