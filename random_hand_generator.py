@@ -8,13 +8,13 @@ def generate_random_hand(hands):
         for card in hands[hand]:
             hands[hand][card]["suit"], hands[hand][card]["rank"], card_history\
             = generate_random_card(card_history, one_deck)
-    print(card_history)
+    #print(card_history)
     return(hands)
 
 def generate_random_card(card_history, one_deck):
     card = (generate_random_suit(), generate_random_rank())
     if card in card_history and one_deck:
-        print('reshuffling')
+        #print('reshuffling')
         return(generate_random_card(card_history, one_deck))
     else:
         card_history.append(card)
