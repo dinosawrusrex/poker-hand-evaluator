@@ -27,12 +27,12 @@ I decided to organise my cards in JSON format. I was familiar with it.
 Currently, I have two different JSON files: `card_template` and `hands`.
 
 `hands` was the first file I used and it still is used when
-`poker_hand_evaluator.py` is called.
+`poker_hand_evaluator.py` alone is called.
 
 `card_template` was created when I recently worked on creating a random hands
-generator. It is used when `random_hand_generator.py` is called, and note,
-`random_hand_generator.py` will change the content of `card_template`.
-`card_template` is also used in `main.py` but `main.py` will not update
+generator. It is used when `random_hand_generator.py` alone is called, and note,
+`random_hand_generator.py` will change the content of `card_template` and save
+it. `card_template` is also used in `main.py` but `main.py` will not update
 `card_template`.
 
 ### Python
@@ -43,9 +43,10 @@ of course, different results will be produced through `poker_hand_evaluator`.
 
 `random_hand_generator` generates a set of hands. It reads in the
 `card_template.json` as a template to create a new JSON file/data for a new
-instance of a game. Currently, it does not take into account whether a card has
+instance of a game. ~~Currently, it does not take into account whether a card has
 been drawn or not. So imagine that this is running with an access to infinite
-decks.
+decks.~~ `random_hand_generator` now gets a user input on whether to generate
+hands from just one deck or from infinite decks.
 
 `poker_hand_evaluator` evaluates the hands given a JSON file/data.
 
@@ -57,5 +58,5 @@ poker hand given a set of hands. I am yet to update this test.
 - Update and add tests to incorporate more scenarios.
 - Refine the evaluator, especially how it stores the order of cards for when
   there are equal hands.
-- Include in generator so that you cannot draw a card that has already been
-  drawn.
+- ~~Include in generator so that you cannot draw a card that has already been
+  drawn.~~
