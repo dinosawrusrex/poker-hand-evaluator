@@ -8,20 +8,20 @@ class Card:
 
     def rank_score(self):
         if isinstance(self.rank, int):
-            return(self.rank)
+            return self.rank
         else:
-            return(self.convert_alpha())
+            return self.convert_alpha()
 
     def convert_alpha(self):
         royalty_conversion = {'jack': 11, 'queen': 12, 'king': 13,
                 'ace': self.ace_conversion()}
-        return(royalty_conversion[self.rank])
+        return royalty_conversion[self.rank]
 
     def ace_conversion(self):
         if {2,3,4,5}.issubset([self.hand[card]['rank'] for card in self.hand]):
-            return(1)
+            return 1
         else:
-            return(14)
+            return 14
 
 
 class Hand:
@@ -46,42 +46,42 @@ class Hand:
         frequencies = {count: sorted([score for score in set(self.rank_scores)
                     if self.rank_scores.count(score) == count], reverse=True)
                     for count in reversed(self.list_of_counts())}
-        return(frequencies)
+        return frequencies
 
     def poker_hand(self):
         if self.check_for_straight():
             if self.check_for_flush():
-                return('straight flush')
-            return('straight')
+                return 'straight flush'
+            return 'straight'
         elif self.check_for_flush() and not self.check_for_straight():
-            return('flush')
+            return 'flush'
         elif self.list_of_counts() == [1,4]:
-            return('four of a kind')
+            return 'four of a kind'
         elif self.list_of_counts() == [2,3]:
-            return('full house')
+            return 'full house'
         elif self.list_of_counts() == [1,1,3]:
-            return('three of a kind')
+            return 'three of a kind'
         elif self.list_of_counts() == [1,2,2]:
-            return('two pair')
+            return 'two pair'
         elif self.list_of_counts() == [1,1,1,2]:
-            return('one pair')
+            return 'one pair'
         else:
-            return('high card')
+            return 'high card'
 
     def list_of_counts(self):
         count_pattern = sorted([self.rank_scores.count(score)
                         for score in set(self.rank_scores)])
-        return(count_pattern)
+        return count_pattern
 
 
     def check_for_flush(self):
         output = len(set(self.suits)) == 1
-        return(output)
+        return output
 
     def check_for_straight(self):
         output = [self.rank_scores[i]-self.rank_scores[i+1] for i in
                 range(len(self.rank_scores)-1)].count(-1) == 4
-        return(output)
+        return output
 
 
 class Game:
@@ -91,11 +91,11 @@ class Game:
 
     def evaluate_hands(self):
         if self.hand_one.score > self.hand_two.score:
-            return('Hand one wins by score.')
+            return 'Hand one wins by score.'
         elif self.hand_one.score < self.hand_two.score:
-            return('Hand two wins by score.')
+            return 'Hand two wins by score.'
         else:
-            return(self.evaluate_tied_hands())
+            return self.evaluate_tied_hands()
 
     def evaluate_tied_hands(self):
         print('Hands are tied. Looking down the ranks:\n')
@@ -107,13 +107,13 @@ class Game:
                 print('Comparing ranks of hand one: {}, hand two: {}.'.format(
                     rank_one, rank_two))
                 if rank_one > rank_two:
-                    return('\nHand one wins by a higher rank.')
+                    return '\nHand one wins by a higher rank.'
                 elif rank_one < rank_two:
-                    return('\nHand two wins by a higher rank.')
+                    return '\nHand two wins by a higher rank.'
                 else:
                     print('Still tied. Continue looking.\n')
         else:
-            return('Identical hands. Draw.')
+            return 'Identical hands. Draw.'
 
     def print_information(self):
         print('Hand one: {}'.format([(card.suit, card.rank) for card in
